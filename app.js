@@ -26,6 +26,8 @@ const fetchExchangeRate = async () => {
     if (exchangeRateData.result === 'error'){
       throw new Error(getErrorMessage(exchangeRateData['error-type']))
     }
+
+    return exchangeRateData;
   } catch (err) {
     alert(err.message);
     const div = document.createElement('div');
@@ -46,12 +48,16 @@ const fetchExchangeRate = async () => {
     currenciesEl.insertAdjacentElement('afterend', div)
   }
 }
-fetchExchangeRate()
 
-const option = `<option>oi</option>`;
+const init = async () => {
+  const exchangeRateData = await fetchExchangeRate()
+  
+  const options = Object.keys(exchangeRateData.conversion_rates)
+    .map(currency => `<option>${currency}</option>`)
+    .join('');
+  
+  currencyOneEl.innerHTML = options;
+  currencyTwoEl.innerHTML = options;
+}
 
-currencyOneEl.innerHTML = option;
-currencyTwoEl.innerHTML = option;
-
-console.log(currencyOneEl, currencyTwoEl);
-
+init();
